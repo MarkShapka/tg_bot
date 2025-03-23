@@ -1,0 +1,19 @@
+[project]
+name = "tg-bot"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "mark.shapka",email = "mark.shapka1@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "openai (>=1.68.2,<2.0.0)",
+    "python-dotenv (>=1.0.1,<2.0.0)",
+    "python-telegram-bot (>=22.0,<23.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
