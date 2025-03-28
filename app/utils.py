@@ -5,10 +5,10 @@ def load_messages(name: str) -> str:
     with open(PATH_TO_MESSAGES / f"{name}.txt", "r") as src:
         return src.read()
 
+
 def load_images(image_file: str) -> bytes:
     with open(PATH_TO_IMAGES / f"{image_file}", "rb") as src:
         return src.read()
-
 
 
 if __name__ == "__main__":

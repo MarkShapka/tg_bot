@@ -1,15 +1,8 @@
-from telegram import BotCommand, MenuButtonCommands, Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, ConversationHandler, \
-    MessageHandler, filters, Application, CallbackContext, CallbackQueryHandler
+    MessageHandler, filters, Application, CallbackQueryHandler
 
-from app.bot.methods import start, gpt_start, gpt_conversation, gpt_end, AWAITING_MESSAGE
+from app.bot.methods import start, gpt_start, gpt_conversation, gpt_end, AWAITING_MESSAGE, random, button_handler
 from config import TG_BOT_API_KEY
-from openapi_client import OpenAIClient
-from utils import load_messages, load_images
-
-
-
-
 
 app = Application.builder().token(TG_BOT_API_KEY).build()
 app.add_handler(CommandHandler("start", start))

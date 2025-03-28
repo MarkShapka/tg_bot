@@ -6,6 +6,7 @@ from utils import load_messages, load_images
 
 AWAITING_MESSAGE = 1
 
+
 # start menu
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     text = load_messages("menu")
