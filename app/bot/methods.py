@@ -1,8 +1,8 @@
-from telegram import Update, BotCommand, MenuButtonCommands
+from telegram import Update, BotCommand, MenuButtonCommands, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, CallbackContext, ConversationHandler
 
 from openapi_client import OpenAIClient
-from utils import load_messages
+from utils import load_messages, load_images
 
 AWAITING_MESSAGE = 1
 
@@ -22,6 +22,35 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # await update.message.reply_text(text)
     await bot.set_chat_menu_button(update.effective_chat.id, MenuButtonCommands())
     await update.effective_chat.send_message(text)
+
+
+# random fact query
+async def random(update: Update, context: CallbackContext) -> None:
+    openai_client = OpenAIClient()
+    fact_prompt = load_messages("random_prompt")
+    python_fact = await openai_client.ask(user_msg="", system_prompt=fact_prompt)
+
+    image_file = load_images("random_facts.png")
+
+    keyboard = [
+        [InlineKeyboardButton("🔄 Another Fact", callback_data="random")],
+        [InlineKeyboardButton("🏠 End", callback_data="start")]
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    message = update.message or update.callback_query.message
+
+    await message.reply_photo(photo=image_file, caption=python_fact, reply_markup=reply_markup)
+
+
+async def button_handler(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    await query.answer()
+
+    if query.data == "random":
+        await random(update, context)  # Call the random fact function again
+    elif query.data == "start":
+        await start(update, context)  # Call the start function
 
 
 # GPT chat
