@@ -1,7 +1,8 @@
 from telegram.ext import CommandHandler, ConversationHandler, \
     MessageHandler, filters, Application, CallbackQueryHandler
 
-from app.bot.methods import start, gpt_start, gpt_conversation, gpt_end, AWAITING_MESSAGE, random, button_handler
+from app.bot.commands import start, gpt_start, gpt_conversation, gpt_end, AWAITING_MESSAGE, random
+from bot.buttons import button_handler
 from config import TG_BOT_API_KEY
 
 app = Application.builder().token(TG_BOT_API_KEY).build()

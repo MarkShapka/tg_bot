@@ -11,6 +11,7 @@ AWAITING_MESSAGE = 1
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     text = load_messages("menu")
     bot = context.bot
+    image_file = load_images("start_tg_bot.jpg")
 
     await bot.set_my_commands([
         BotCommand("start", "Start the bot"),
@@ -22,7 +23,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # await bot.set_chat_menu_button(update.effective_chat.id, MenuButtonCommands())
     # await update.message.reply_text(text)
     await bot.set_chat_menu_button(update.effective_chat.id, MenuButtonCommands())
-    await update.effective_chat.send_message(text)
+    if update.message:
+        await update.message.reply_photo(photo=image_file, caption=text)
+    else:
+        await update.effective_chat.send_photo(photo=image_file, caption=text)
 
 
 # random fact query
@@ -34,24 +38,14 @@ async def random(update: Update, context: CallbackContext) -> None:
     image_file = load_images("random_facts.png")
 
     keyboard = [
-        [InlineKeyboardButton("🔄 Another Fact", callback_data="random")],
-        [InlineKeyboardButton("🏠 End", callback_data="start")]
+        [InlineKeyboardButton("🔄 Хочу ще факт", callback_data="random")],
+        [InlineKeyboardButton("🏠 Закінчити", callback_data="start")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
     message = update.message or update.callback_query.message
 
     await message.reply_photo(photo=image_file, caption=python_fact, reply_markup=reply_markup)
-
-
-async def button_handler(update: Update, context: CallbackContext) -> None:
-    query = update.callback_query
-    await query.answer()
-
-    if query.data == "random":
-        await random(update, context)  # Call the random fact function again
-    elif query.data == "start":
-        await start(update, context)  # Call the start function
 
 
 # GPT chat
@@ -62,8 +56,17 @@ async def gpt_start(update: Update, context: CallbackContext) -> int:
 
 async def gpt_conversation(update: Update, context: CallbackContext) -> int:
     user_msg = update.message.text
+
+    keyboard = [
+        [InlineKeyboardButton("🏠 Закінчити", callback_data="start")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
     response = await OpenAIClient().ask(user_msg=user_msg)
-    await update.message.reply_text(response)
+
+    message = update.message or update.callback_query.message
+
+    await message.reply_text(text=response, reply_markup=reply_markup)
     return AWAITING_MESSAGE
 
 
