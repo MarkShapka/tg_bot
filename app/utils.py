@@ -1,4 +1,10 @@
+from enum import Enum
+
 from config import PATH_TO_MESSAGES, PATH_TO_IMAGES
+
+class MessageType(Enum):
+    GPT_CHAT = 1
+    SET_CELEBRITY = 2
 
 
 def load_messages(name: str) -> str:
